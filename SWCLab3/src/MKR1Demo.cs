@@ -1,4 +1,5 @@
 ﻿using SWCLab3.src.LightHTML;
+using SWCLab3.src.LightHTML.Commands;
 using SWCLab3.src.LightHTML.Interfaces;
 using SWCLab3.src.LightHTML.Iterators;
 using SWCLab3.src.LightHTML.States;
@@ -14,7 +15,7 @@ public static class MKR1Demo
         ShowTemplateMethod();
         ShowIterator();
         ShowState();
-        // ShowCommand();
+        ShowCommand();
         // ShowVisitor();
     }
 
@@ -30,6 +31,31 @@ public static class MKR1Demo
         Console.WriteLine("\nРезультат рендерингу (спрацює OnStylesApplied всередині OuterHTML):");
         Console.WriteLine(div.OuterHTML);
         Console.WriteLine();
+    }
+
+    public static void ShowCommand()
+    {
+        Console.WriteLine("[ФІЧА 4: Command (Undo/Redo)]");
+
+        var div = new LightElementNode("div", "block", "paired");
+        var invoker = new CommandInvoker();
+
+        Console.WriteLine("--- Виконуємо дії ---");
+        var cmd1 = new AddChildCommand(div, new LightTextNode("Перший рядок. "));
+        var cmd2 = new AddChildCommand(div, new LightTextNode("Другий рядок."));
+
+        invoker.ExecuteCommand(cmd1);
+        invoker.ExecuteCommand(cmd2);
+
+        Console.WriteLine($"Поточний HTML: {div.OuterHTML}");
+
+        Console.WriteLine("\n--- Скасовуємо останню дію (Undo) ---");
+        invoker.Undo();
+        Console.WriteLine($"Після Undo: {div.OuterHTML}");
+
+        Console.WriteLine("\n--- Повертаємо скасовану дію (Redo) ---");
+        invoker.Redo();
+        Console.WriteLine($"Після Redo: {div.OuterHTML}\n");
     }
 
     public static void ShowIterator()
