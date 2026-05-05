@@ -1,4 +1,6 @@
-﻿namespace SWCLab3.src.LightHTML;
+﻿using SWCLab3.src.LightHTML.Interfaces;
+
+namespace SWCLab3.src.LightHTML;
 
 public abstract class LightNode
 {
@@ -12,4 +14,6 @@ public abstract class LightNode
     {
         Console.WriteLine("Styles are being processed...");
     }
+
+    public abstract void Accept(ILightVisitor visitor);
 }
