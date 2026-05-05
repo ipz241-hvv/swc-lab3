@@ -6,6 +6,9 @@ using SWCLab3.src.Composite;
 using SWCLab3.src.Decorator;
 using SWCLab3.src.Flyweight;
 using SWCLab3.src.Proxy;
+using SWCLab3.src.LightHTML;
+using LightElementNode = SWCLab3.src.LightHTML.LightElementNode;
+using LightTextNode = SWCLab3.src.LightHTML.LightTextNode;
 
 namespace SWCLab3;
 
@@ -25,6 +28,7 @@ internal class Program
             Console.WriteLine("4. Завдання 4: Проксі (Reader)");
             Console.WriteLine("5. Завдання 5: Компонувальник (HTML)");
             Console.WriteLine("6. Завдання 6: Легковаговик (Книга)");
+            Console.WriteLine("7. МКР 1: LightHTML (Поведінкові шаблони)");
             Console.WriteLine("0. Вихід");
             Console.Write("\nОберіть варіант: ");
 
@@ -41,6 +45,7 @@ internal class Program
                 case "4": RunProxy(); break;
                 case "5": RunComposite(); break;
                 case "6": await RunFlyweight(); break;
+                case "7": RunMKR1(); break;
                 default: Console.WriteLine("Неправильний номер"); break;
             }
 
@@ -111,11 +116,11 @@ internal class Program
     static void RunComposite()
     {
         Console.WriteLine("--- Завдання 5: Компонувальник ---");
-        var table = new LightElementNode("table", "block", "paired", new List<string> { "grid" });
-        var tr = new LightElementNode("tr", "block", "paired", null);
-        var td = new LightElementNode("td", "inline", "paired", null);
+        var table = new src.Composite.LightElementNode("table", "block", "paired", new List<string> { "grid" });
+        var tr = new src.Composite.LightElementNode("tr", "block", "paired", null);
+        var td = new src.Composite.LightElementNode("td", "inline", "paired", null);
 
-        td.AddChild(new LightTextNode("Ячейка таблиці"));
+        td.AddChild(new src.Composite.LightTextNode("Ячейка таблиці"));
         tr.AddChild(td);
         table.AddChild(tr);
 
@@ -135,12 +140,12 @@ internal class Program
         GC.Collect();
         long memBeforeSimple = GC.GetTotalMemory(true);
 
-        var rootSimple = new LightElementNode("body", "block", "paired");
+        var rootSimple = new src.Composite.LightElementNode("body", "block", "paired");
         foreach (var line in lines)
         {
             if (string.IsNullOrWhiteSpace(line)) continue;
-            var p = new LightElementNode("p", "block", "paired");
-            p.AddChild(new LightTextNode(line));
+            var p = new src.Composite.LightElementNode("p", "block", "paired");
+            p.AddChild(new src.Composite.LightTextNode(line));
             rootSimple.AddChild(p);
         }
         long memAfterSimple = GC.GetTotalMemory(true);
@@ -157,7 +162,7 @@ internal class Program
         {
             if (string.IsNullOrWhiteSpace(line)) continue;
             var p = new LightElementNodeFlyweight("p", "block", "paired");
-            p.AddChild(new LightTextNode(line));
+            p.AddChild(new src.Composite.LightTextNode(line));
             bodyFly.AddChild(p);
         }
 
@@ -170,5 +175,25 @@ internal class Program
 
         double savings = 100.0 - ((double)resFly / resSimple * 100.0);
         Console.WriteLine($"Економія пам'яті: {resSimple - resFly} байт (~{savings:F1}%)");
+    }
+
+    static void RunMKR1()
+    {
+        Console.WriteLine("--- МКР 1: Демонстрація LightHTML (Behavioral Patterns) ---\n");
+
+        Console.WriteLine("[ФІЧА 1: Template Method]");
+
+        var div = new LightElementNode("div", "block", "paired", new List<string> { "container" });
+        var text = new LightTextNode("Привіт, МКР!");
+
+        div.AddChild(text);
+
+        Console.WriteLine("\nРезультат рендерингу (спрацює OnStylesApplied всередині OuterHTML):");
+        Console.WriteLine(div.OuterHTML);
+
+        // TODO: Демонстрація Iterator (Обхід дерева)
+        // TODO: Демонстрація State (Зміна видимості)
+        // TODO: Демонстрація Command (Undo/Redo дій)
+        // TODO: Демонстрація Visitor (Аналіз дерева)
     }
 }
