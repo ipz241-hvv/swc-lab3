@@ -1,7 +1,11 @@
-﻿namespace SWCLab3.src.LightHTML;
+﻿using SWCLab3.src.LightHTML.Interfaces;
+using SWCLab3.src.LightHTML.States;
+
+namespace SWCLab3.src.LightHTML;
 
 public class LightElementNode : LightNode
 {
+    private INodeState _state = new VisibleState();
     private readonly LightElementType _type;
     private readonly List<LightNode> _children = new();
     public List<string> Classes { get; }
@@ -16,6 +20,8 @@ public class LightElementNode : LightNode
         OnCreated();
     }
 
+    public void SetState(INodeState state) => _state = state;
+    
     public void AddChild(LightNode node)
     {
         if (_type.ClosingType == "single")
@@ -49,18 +55,17 @@ public class LightElementNode : LightNode
 
     public override string InnerHTML => string.Join("", _children.Select(child => child.OuterHTML));
 
-    public override string OuterHTML
+    public override string OuterHTML => _state.Render(this);
+
+    public string RenderInternal()
     {
-        get
-        {
-            OnStylesApplied();
+        OnStylesApplied();
 
-            string classAttr = Classes.Any() ? $" class=\"{string.Join(" ", Classes)}\"" : "";
+        string classAttr = Classes.Any() ? $" class=\"{string.Join(" ", Classes)}\"" : "";
 
-            if (_type.ClosingType == "single")
-                return $"<{_type.TagName}{classAttr} />";
+        if (_type.ClosingType == "single")
+            return $"<{_type.TagName}{classAttr} />";
 
-            return $"<{_type.TagName}{classAttr}>{InnerHTML}</{_type.TagName}>";
-        }
+        return $"<{_type.TagName}{classAttr}>{InnerHTML}</{_type.TagName}>";
     }
 }

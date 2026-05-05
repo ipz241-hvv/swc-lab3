@@ -183,12 +183,4 @@ internal class Program
     {
         MKR1Demo.ShowAllFeatures();
     }
-
-    static void PrintNodeInfo(LightNode node)
-    {
-        if (node is LightElementNode el)
-            Console.WriteLine($"Елемент: <{el.TagName}>");
-        else if (node is LightTextNode txt)
-            Console.WriteLine($"Текст: \"{txt.InnerHTML.Trim()}\"");
-    }
 }
