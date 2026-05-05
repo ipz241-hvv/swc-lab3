@@ -1,13 +1,15 @@
 ﻿using System.Text;
 using ConsoleApp.src.Utils;
+using SWCLab3.src;
 using SWCLab3.src.Adapter;
 using SWCLab3.src.Bridge;
-using SWCLab3.src.Composite;
 using SWCLab3.src.Decorator;
 using SWCLab3.src.Flyweight;
+using SWCLab3.src.LightHTML.Interfaces;
+using SWCLab3.src.LightHTML.Iterators;
 using SWCLab3.src.Proxy;
-using SWCLab3.src.LightHTML;
 using LightElementNode = SWCLab3.src.LightHTML.LightElementNode;
+using LightNode = SWCLab3.src.LightHTML.LightNode;
 using LightTextNode = SWCLab3.src.LightHTML.LightTextNode;
 
 namespace SWCLab3;
@@ -179,21 +181,14 @@ internal class Program
 
     static void RunMKR1()
     {
-        Console.WriteLine("--- МКР 1: Демонстрація LightHTML (Behavioral Patterns) ---\n");
+        MKR1Demo.ShowAllFeatures();
+    }
 
-        Console.WriteLine("[ФІЧА 1: Template Method]");
-
-        var div = new LightElementNode("div", "block", "paired", new List<string> { "container" });
-        var text = new LightTextNode("Привіт, МКР!");
-
-        div.AddChild(text);
-
-        Console.WriteLine("\nРезультат рендерингу (спрацює OnStylesApplied всередині OuterHTML):");
-        Console.WriteLine(div.OuterHTML);
-
-        // TODO: Демонстрація Iterator (Обхід дерева)
-        // TODO: Демонстрація State (Зміна видимості)
-        // TODO: Демонстрація Command (Undo/Redo дій)
-        // TODO: Демонстрація Visitor (Аналіз дерева)
+    static void PrintNodeInfo(LightNode node)
+    {
+        if (node is LightElementNode el)
+            Console.WriteLine($"Елемент: <{el.TagName}>");
+        else if (node is LightTextNode txt)
+            Console.WriteLine($"Текст: \"{txt.InnerHTML.Trim()}\"");
     }
 }
