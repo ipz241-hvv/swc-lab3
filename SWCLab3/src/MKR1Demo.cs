@@ -3,6 +3,7 @@ using SWCLab3.src.LightHTML.Commands;
 using SWCLab3.src.LightHTML.Interfaces;
 using SWCLab3.src.LightHTML.Iterators;
 using SWCLab3.src.LightHTML.States;
+using SWCLab3.src.LightHTML.Visitors;
 
 namespace SWCLab3.src;
 
@@ -16,7 +17,7 @@ public static class MKR1Demo
         ShowIterator();
         ShowState();
         ShowCommand();
-        // ShowVisitor();
+        ShowVisitor();
     }
 
     public static void ShowTemplateMethod()
@@ -105,6 +106,29 @@ public static class MKR1Demo
         Console.WriteLine("\n--- Повертаємо стан Visible ---");
         div.SetState(new VisibleState());
         Console.WriteLine(div.OuterHTML);
+        Console.WriteLine();
+    }
+
+    public static void ShowVisitor()
+    {
+        Console.WriteLine("[ФІЧА 5: Visitor (Статистика дерева)]");
+
+        var body = new LightElementNode("body", "block", "paired");
+        var h1 = new LightElementNode("h1", "block", "paired");
+        var p = new LightElementNode("p", "block", "paired");
+
+        h1.AddChild(new LightTextNode("Заголовок МКР"));
+        p.AddChild(new LightTextNode("Це тестовий абзац для перевірки Visitor."));
+
+        body.AddChild(h1);
+        body.AddChild(p);
+
+        var counter = new ElementCounterVisitor();
+        body.Accept(counter);
+
+        Console.WriteLine("--- Результати аналізу ---");
+        Console.WriteLine($"Кількість HTML-тегів: {counter.ElementCount}");
+        Console.WriteLine($"Кількість текстових блоків: {counter.TextCount}");
         Console.WriteLine();
     }
 

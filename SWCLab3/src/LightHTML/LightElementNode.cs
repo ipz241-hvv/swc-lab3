@@ -68,4 +68,13 @@ public class LightElementNode : LightNode
 
         return $"<{_type.TagName}{classAttr}>{InnerHTML}</{_type.TagName}>";
     }
+
+    public override void Accept(ILightVisitor visitor)
+    {
+        visitor.VisitElement(this);
+        foreach (var child in Children)
+        {
+            child.Accept(visitor);
+        }
+    }
 }
