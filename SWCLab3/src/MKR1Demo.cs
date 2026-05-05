@@ -1,6 +1,7 @@
 ﻿using SWCLab3.src.LightHTML;
 using SWCLab3.src.LightHTML.Interfaces;
 using SWCLab3.src.LightHTML.Iterators;
+using SWCLab3.src.LightHTML.States;
 
 namespace SWCLab3.src;
 
@@ -12,7 +13,7 @@ public static class MKR1Demo
 
         ShowTemplateMethod();
         ShowIterator();
-        // ShowState();
+        ShowState();
         // ShowCommand();
         // ShowVisitor();
     }
@@ -58,6 +59,26 @@ public static class MKR1Demo
         {
             PrintNodeInfo(bfs.Next());
         }
+        Console.WriteLine();
+    }
+
+    public static void ShowState()
+    {
+        Console.WriteLine("[ФІЧА 3: State]");
+
+        var div = new LightElementNode("div", "block", "paired", new List<string> { "box" });
+        div.AddChild(new LightTextNode("Я видимий елемент"));
+
+        Console.WriteLine("--- Поточний стан: Visible ---");
+        Console.WriteLine(div.OuterHTML);
+
+        Console.WriteLine("\n--- Перемикаємо стан на Hidden ---");
+        div.SetState(new HiddenState());
+        Console.WriteLine($"Результат (має бути порожньо): '{div.OuterHTML}'");
+
+        Console.WriteLine("\n--- Повертаємо стан Visible ---");
+        div.SetState(new VisibleState());
+        Console.WriteLine(div.OuterHTML);
         Console.WriteLine();
     }
 
